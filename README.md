@@ -29,7 +29,7 @@ All visible elements include the 'data-testid' attribute for automated testing.<
 <br>
  HOW TO RUN IT<br>
 -Clone or download this folder:<br>
-  (git clone https://github.com/ayodejioluwadabira-tech/multi-page-site.git)<br>
+  (git clone https://github.com/ayodejioluwadabira-tech/multipage-profile.git)<br>
 -Open the folder in your code editor or file explorer.<br>
 -Double-click index.html — it opens in your browser.<br>
 -Use the navbar links to move between pages:<br>
