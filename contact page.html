@@ -3,41 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us</title>
+  <title>Contact Me</title>
   <style>
     :root {
       --primary: #0A1F44;
       --error: red;
       --success: green;
       --bg: white;
-      --text: black;
+      --text: white;
     }
     nav{
       align-items: center;
-      margin-top: -15px;
-      text-align: center;
+      margin-top: -1px;
       margin-left: -520px;
-      font-size: 25px;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      margin-left: -520px;
+      font-size: 15px;
     }
     body {
-      margin-left: 430px;
       font-family: system-ui, sans-serif;
-      text-emphasis-style: bold;
       background: black;
       padding: 2rem;
       color: var(--text);
-      display: block;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+}
 
-      
-    }
+nav {
+  text-align: center;
+  font-size: 15px;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: -18px;
+  margin-left: 10px;
+  position: center;
+  justify-content: center;  
+}
     main {
       width: 70%;
       height: 70%;
       max-width: 500px;
-      background: skyblue;
+      background: white;
       color: #0A1F44;
       padding: 2rem;
       border-radius: 1rem;
@@ -64,7 +75,7 @@
       width: 97%;
       padding: 0.75rem;
       border: 1px solid black;
-      background-color: skyblue;
+      background-color: white;
       border-radius: 0.5rem;
       font-size: 1rem;
     }
@@ -91,7 +102,7 @@
     }
 
     .success {
-      color: red;
+      color: blue;
       font-weight: bold;
       text-align: center;
       margin-top: 1rem;
@@ -106,14 +117,15 @@
 </head>
 <body>
   <nav>
-    <a href="index.html" data-testid="test-home" aria-current="page" style="font-size: 25px;color: skyblue ;">Home page</a>
-    <a href="About me.html" data-testid="test-about" style="font-size: 25px;color: skyblue;">About Me</a>
-    <a href="contact page.html" data-testid="test-contact" style="font-size: 25px;color: skyblue;">Contact Us</a><br>
+    <a href="index.html" data-testid="test-home" aria-current="page" style="font-size: 25px;color: skyblue ;">Profile pic</a>
+    <a href="About me.html" data-testid="test-about" style="font-size: 25px;color: skyblue; position: center;">About Me</a>
+    <a href="contact page.html" data-testid="test-contact" style="font-size: 25px;color: skyblue;">Contact Me</a><br>
   </nav>
   <main>
-    <h1>Contact Us</h1>
+    <h1>Contact Me</h1>
     <form id="contactForm" novalidate>
       <div>
+        <input type="hidden" name="access_key" value="10b12d9c-0056-4605-9506-54a959aee678">
         <label for="name">Full Name</label>
         <input id="name" name="name" type="text" data-testid="test-contact-name" aria-describedby="error-name" required />
         <p id="error-name" data-testid="test-contact-error-name" class="error" hidden></p>
@@ -143,54 +155,77 @@
   </main>
 
   <script>
-    //Success message
-    const form = document.getElementById('contactForm');
-    const successMsg = document.getElementById('successMessage');
+  const form = document.getElementById('contactForm');
+  const successMsg = document.getElementById('successMessage');
+  const submitBtn = form.querySelector('button[type="submit"]');
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
 
-      //Error messages
-      document.querySelectorAll('.error').forEach(err => err.hidden = true);
+    // Clear previous errors
+    document.querySelectorAll('.error').forEach(err => err.hidden = true);
+    successMsg.hidden = true;
 
-      const name = form.name.value.trim();
-      const email = form.email.value.trim();
-      const subject = form.subject.value.trim();
-      const message = form.message.value.trim();
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const subject = form.subject.value.trim();
+    const message = form.message.value.trim();
 
-      let valid = true;
+    let valid = true;
 
-      if (!name) {
-        showError('name', 'Full name is required');
-        valid = false;
-      }
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        showError('email', 'Please enter a valid email address');
-        valid = false;
-      }
-      if (!subject) {
-        showError('subject', 'Subject is required');
-        valid = false;
-      }
-      if (!message || message.length < 10) {
-        showError('message', 'Message must be at least 10 characters long');
-        valid = false;
-      }
-
-      if (valid) {
-        form.reset();
-        successMsg.hidden = false;
-        successMsg.focus();
-      } else {
-        successMsg.hidden = true;
-      }
-    });
-
-    function showError(field, msg) {
-      const errorEl = document.getElementById(`error-${field}`);
-      errorEl.textContent = msg;
-      errorEl.hidden = false;
+    if (!name) {
+      showError('name', 'Full name is required');
+      valid = false;
     }
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      showError('email', 'Please enter a valid email address');
+      valid = false;
+    }
+    if (!subject) {
+      showError('subject', 'Subject is required');
+      valid = false;
+    }
+    if (!message || message.length < 10) {
+      showError('message', 'Message must be at least 10 characters long');
+      valid = false;
+    }
+
+    // If validation passes, send data to Web3Forms API
+    if (valid) {
+      submitBtn.innerText = 'Sending...';
+      submitBtn.disabled = true;
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+          form.reset();
+          successMsg.textContent = "Thank you! Your message has been sent successfully.";
+          successMsg.hidden = false;
+        } else {
+          showError('message', data.message || 'Something went wrong. Please try again.');
+        }
+      } catch (err) {
+        showError('message', 'Network error. Please check your internet connection.');
+      } finally {
+        submitBtn.innerText = 'Submit';
+        submitBtn.disabled = false;
+      }
+    }
+  });
+
+  function showError(field, msg) {
+    const errorEl = document.getElementById(`error-${field}`);
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
   </script>
 </body>
 </html>
